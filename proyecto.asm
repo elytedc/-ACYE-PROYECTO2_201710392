@@ -356,3 +356,249 @@ mUserExiste macro Username
         mov existee, 0 ; no existe usuario, no hay error
     salir:
 endm 
+
+
+mDrawEborrado macro  x,y 
+    local figuraB
+    push cx
+    push ax
+    push dx 
+    xor ax, ax 
+    xor dx, dx 
+    mov cx, 6t
+    mov ax, x
+    mov dx, y
+    dec x 
+    dec x 
+    figuraB:
+        mDecVar y,4t 
+        mDrawFila x,y,0t,8t     
+        mov y, dx 
+        dec x
+        loop figuraB
+    mov x,ax
+    pop dx
+    pop ax
+    pop cx 
+endm 
+mDrawNaveEdestruida macro  x,y  ;NAVE ENEMIGA DESTRUIDA 
+    local figuraB
+    push cx
+    push ax
+    push dx 
+    xor ax, ax 
+    xor dx, dx 
+    xor cx, cx 
+    mov cx, 12t
+    mov ax, x
+    mov dx, y
+    inc x 
+    inc x 
+    inc x 
+    figuraB:
+        mDecVar y,8t 
+        mDrawFila x,y,0t,16t     
+        mov y, dx 
+        dec x
+        loop figuraB
+    mov x,ax
+    pop dx
+    pop ax
+    pop cx 
+endm 
+;borrar la bala luego de que finalice el movimiento de esta 
+mLimpiarDisparo macro x,y 
+    local borrarMovBala
+    push cx 
+    mov cx, 4 
+    borrarMovBala:
+        mDrawPixel x,y,0t
+        inc x
+        loop borrarMovBala
+    pop cx 
+endm 
+
+;IMPRIME STRINGS CON COLOR EN UNA POSICION INDICADA 
+mImprimirLetreros macro letrero,fila,columna,color
+    push ax
+    push bx
+    push cx
+    push dx  
+    push bp 
+    mov al,1   ;MODO DE IMPRESION CON COLOR (1), SIN COLO(0)
+    mov bh,0   ;PAGINA 
+    mov bl,color  ;COLOR  (PALETA VGA 1t-255t)
+    mov cx,LENGTHOF letrero ;tamaño del letrero 
+    mov dl,columna ;columna 
+    mov dh,fila ;fila 
+    call pDataS_ES ;se puede realiar esto o el procedimiento de abajo siempre y cuando ds tenga el valor de @data 
+    ;push ds  ;meto el valor de ds a la pila (que contiene el data segment)
+    ;pop es  ;dicho valor se saca de la pila y se asigna a "es" 
+    mov bp,offset letrero 
+    mov ah,13h
+	int 10h
+    call pMemVideoMode;SE VUELVE A COLOCAR LA MEMORIA DE VIDEO EN ES 
+    pop bp 
+    pop dx 
+    pop cx
+    pop bx 
+    pop ax 
+endm 
+
+;EN RANGO PERO CON DW 
+mEnRangoDw macro dato,limif, limsup
+    local enElrango,noEnelrango,salir
+    ;ja >,jb <,  jbe<=
+    mCompararDw dato,limif
+    jb noEnelrango ; si es menor al limite inferior no esa en el rango
+    mCompararDw dato,limsup
+    jbe enElrango ; si es menor o igual al limite superior esta en el rango
+    ja noEnelrango; si es mayor no esta en el rango 
+    enElrango:
+        MovVariables enrango,1
+        jmp salir 
+    noEnelrango:
+        MovVariables enrango,0
+    salir:
+endm
+
+mWaitKey macro key 
+    local ciclo 
+    push ax 
+    ciclo: 
+    mov ah, 00  ;Espera a que se presione una tecla y la lee
+    int 16h
+    cmp al,key 
+    jne ciclo 
+    pop ax 
+endm 
+
+;MACROS PARA ORDENAMIENTO ################################################################################
+
+;MACRO PARA CAPTURAR STRINGS DE UN DOCUMENTO EXTERNO EN UNA VARIABLE 
+mCapturarStringDoc macro variableAlmacenadora 
+    local salir,capturarString
+    push si  
+    mov si,0
+    capturarString:
+        MovVariables variableAlmacenadora[si],eleActual
+        inc si
+        mReadFile eleActual
+        cmp eleActual,1 ;es igual a 1 ASCII (no es igual al 1 decimal no afecta a los numeros)?
+        je salir  ; si, terminar de capturar
+        cmp eleactual,00
+        je salir 
+        cmp eleActual,0A ;es igual a enter tipo1
+        je salir  ; si, terminar de capturar
+        cmp eleActual," " ;los 0's impresos en un documento externo se vuelven espacios
+        je salir  ; si, terminar de capturar
+        jmp capturarString
+    salir:
+    pop si 
+endm
+
+mDrawBarra macro x,y,alto,ancho,color 
+    local cicloAncho,cicloAlto,no0x,no0y
+    push ax 
+    push dx
+    push cx 
+    
+    movVariablesDw cordx,x
+    movVariablesDw cordy,y 
+        cmp cordx,0
+        jne no0x
+        mov cordx,1 
+        no0x:
+        cmp cordy,0
+        jne no0y
+        mov cordy,1 
+        no0y:
+    ;ancho de x1 a x2
+    ;alto de y1 a y2
+    mov ax,x
+    mov dx,y 
+    mov cx,ancho
+    cicloAncho: 
+    push cx 
+        mov cx, alto 
+        cicloAlto:
+            mDrawPixel cordx,cordy,color  
+            inc cordx 
+        loop cicloAlto
+        mov cordx,ax 
+    pop cx 
+    inc cordy 
+    loop cicloAncho
+    mov cordy, dx 
+    pop cx
+    pop dx 
+    pop ax 
+endm 
+
+mIncFilaBar macro fila
+    local salir 
+    mEnRangoDw CDatos,12t,20t 
+    inc fila 
+    cmp enrango,1
+    je salir  
+
+    mEnRangoDw CDatos,8t,11t 
+    inc fila 
+    cmp enrango,1
+    je salir 
+
+    mEnRangoDw CDatos,5t,7t
+    inc fila 
+    cmp enrango,1
+    je salir 
+
+    inc fila 
+    cmp CDatos,4t 
+    je salir  
+
+    inc fila 
+    inc fila 
+    cmp CDatos,3t 
+    je salir  
+    mIncVar fila,3t 
+    cmp CDatos,2t
+    salir: 
+endm 
+;MUEVE EL CURSOR DE LA POSICION ACTUAL DEL DOCUMENTO LEIDO A LA FILA DESEADA (empieza desde 0)
+mMoverAFila macro fila 
+    local ciclo,salir 
+    call pInidoc ;POSICIONA EL CURSOR EN EL INICIO DEL DOCUMENTO LEIDO 
+    push cx
+    cmp fila,0
+    je salir 
+    mov cx,fila 
+    ciclo: 
+        mHallarSimbolo 0A
+    loop ciclo
+    salir:     
+    pop cx
+endm 
+;CAPTURA LA FILA ACTUAL DONDE SE ENCUENTRA EL CURSOR EN EL DOCUMENTO LEIDO EN UNA VARIABLE
+mCapturarFilaDoc macro varAlmacenadora 
+    local salir,capturarString,noseparador,separador
+    push si  
+    mov si,0
+        mReadFile eleactual
+    capturarString:
+        cmp eleactual,01 ;separador
+        jne noseparador
+        MovVariables varAlmacenadora[si],09h ;tabulacion
+        jmp separador
+        noseparador: 
+        MovVariables varAlmacenadora[si],eleActual
+        separador:
+        inc si
+        mReadFile eleActual
+        cmp eleActual,0A ;es igual a enter tipo1
+        je salir  ; si, terminar de capturar
+        cmp eleActual,0dh ;es igual a enter tipo1
+        je salir  ; si, terminar de capturar
+        jmp capturarString
+    salir:
+    pop si 
+endm
