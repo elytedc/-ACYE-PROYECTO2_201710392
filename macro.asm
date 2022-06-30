@@ -2,12 +2,12 @@
 ;Livesgame
 mVariables macro
     ;Mensaje de Bienvenida
-    mensajeI db 0A,"Universidad de San Carlos de Guatemala",0A,"Facultad de Ingenieria",0A,"Escuela de Ciencias y Sistemas",0A,"Arquitectura de Compiladores y Ensambladores",0A,"Seccion B",0A,"Brandon Oswaldo Yax Campos",0A,"201800534",0A;0A ES ENTER
+    mensajeI db 0A,"Universidad de San Carlos de Guatemala",0A,"Facultad de Ingenieria",0A,"Escuela de Ciencias y Sistemas",0A,"Arquitectura de Compiladores y Ensambladores",0A,"Seccion A",0A,"John Henry Lopez Mijangos",0A,"201710392",0A;0A ES ENTER
     auxMi db "$"
     ;enter para avanzar
     espEnter db 0A,"(Presiona enter para poder continuar): $"
     ;MENU PRINCIPAL 
-    Menu db 0A,"Menu",3A,0A,"F1. Login",0A,"F2. Register",0A,"F9. Exit",0A,"$"
+    Menu db 0A,"Menu",3A,0A,"1. Login",0A,"2. Registrar",0A,"3. Exit",0A,"$"
     ; Opcion incorrecta
     opi db 0A,"**No se escogio una opcion entre las que existen**",0A,"$"
     ;MENSAJE LUEGO DE EQUIVOCARSE 3 VECES
@@ -24,10 +24,10 @@ mVariables macro
         msgSpeedTittle  db "==Bubble Speed==","$"
     ;LOGIN=====================================================================================
     msgLogin db 0A,"============Login",58t,"============",0A,"$"
-    msgexit db "(presione tab y luego 2 enter para salir)",0A,"$"
+    msgexit db "(presione salir)",0A,"$"
     UsuarioI db 25 dup (24) ;nombre de usuario a ingresar
     useriaux db "$"
-    PasswordI db 25 dup (24)   ;contraseña a ingresar
+    PasswordI db 25 dup (24)   ;contraseña a ingresar scoreGString
     passiaux db "$"
     msgUnE  db 0A,"===Usuario no Existe===",0A,"$"
     msgPinc  db 0A,"===Password Incorrecta===",0A,"$"
@@ -35,11 +35,11 @@ mVariables macro
     enteraux db 0A,"$"
         ;MENU DE USUARIO
         msgMenuU db "====Menu de usuario===","$"
-        MenuUsuario db "F2. Play game",0A,"F3. Show top 10 scoreboard",0A,"F5. Show my top 10 scoreboard",0A,"F9. Logout",0A,"$"
+        MenuUsuario db "1. Iniciar Juego",0A,"2. TOP 10",0A,"3. Salir",0A,"$"
    
-        ;MENU USUARIO ADMIN
+        ;MENU USUARIO ADMIN MenuAdmin 
         msgMuA db "Menu usuario Admin","$"
-        MenuUsuarioAdmin db "F1. Unlock User",0A,"F2. Show top 10 scoreboard",0A,"F3. Show my top 10 scoreboard",0A,"F4. Play Game",0A,"F5. Bubble Sort",0A,"F6. Heap Sort",0A,"F7. Tim sort",0A,"F9. Logout",0A,"$"
+        MenuUsuarioAdmin db "1. TOP 10 score",0A,"F2. Show top 10 scoreboard",0A,"F3. Show my top 10 scoreboard",0A,"F4. Play Game",0A,"F5. Bubble Sort",0A,"F6. Heap Sort",0A,"F7. Tim sort",0A,"F9. Logout",0A,"$"
     
         ;MENU DE ADMIN mEncontrarId
         msgMenuAdmin db "Menu de Admin","$"
@@ -54,7 +54,7 @@ mVariables macro
         Udadoadmin db "==Se ascendio a admin a el usuario==$"
         UquitAdmin db "==Se removio de admin al usuario==$"
 
-        MenuAdmin db "F1. Unlock User",0A,"F2. Promote user to admin",0A,"F3. Demote user from admin",0A,"F5. Bubble Sort",0A,"F6. Heap Sort",0A,"F7. Tim sort",0A,"F9. Logout",0A,"$"
+        MenuAdmin db "1. TOP SCORE",0A,"2. TOP TIMES",0A,"3. ORDENAMIENTO SCORE",0A,"4. SALIR",0A,"$"
         Umoderado db 25 dup (24)
         ;DELAY
         valort1 db 0
@@ -65,13 +65,13 @@ mVariables macro
         contadort dw 0
         contDb db 0
         StringNumT db 4 dup(24)
-    ;COMO AUXILIAR PARA LA MACRO NUM2STRING UsuarioRegis mSizeUser
+    ;COMO AUXILIAR PARA LA MACRO NUM2STRING UsuarioRegis mSizeUser MenuDirOrd
     contador db 0
 
     ;REGISTRO DE USUARIOS=======================================================================
     msgRegister db 0A,"============Register",58t,"============",0A,"$"
     ;adminG db "Nombre",01,"Contraseña",01,Numero de veces que se equivoco,01,"Bloqueado/n","Admin/n" enter (0A)
-    adminG db "201800534BADM$$$$$$$$$$$$",01,"435008102$$$$$$$$$$$$$$$$",01,"0",01,"N",01,"A",0A," "
+    adminG db "201710392BADM$$$$$$$$$$$$",01,"435008102$$$$$$$$$$$$$$$$",01,"0",01,"N",01,"A",0A," "
     nameAdminG db "201800534BADM$$$$$$$$$$$$"
     rU db "Ingrese usuario",58t," $"
     rP db "Password",58t," $"
@@ -123,15 +123,15 @@ mVariables macro
     stringNumactual db 20 dup (24)
     Numactual dw 0 
     auxs db "$"
-    espacioL db " " ;espacio limpio 
+    espacioL db " " ;espacio limpio  MenuMetricaOrd
     espacio db " ","$"
     retroceso db 08, "$"
     asterisco db "*","$"
 
     ;ORDENAMIENTOS Y SCORE==========================================================================
-        MenuDirOrd db "F1. Ascending",0A,"F2. Descending", 0A,"F9. Go back",0A,"$"
-        MenuMetricaOrd db "F1. Points",0A,"F2. Time", 0A,"F9. Go back",0A,"$"
-        MenuSpeed db "F1. 0",0A,"F2. 1",0A,"F3. 2",0A,"F4. 3",0A,"F5. 4",0A,"F6. 5",0A,"F7. 6",0A,"F8. 7",0A,"F9. Go back",0A,"$"
+        MenuDirOrd db "1. Asceendente",0A,"2. Descendente", 0A,"3. SALIR",0A,"$"
+        MenuMetricaOrd db "1. Score",0A,"2. Tiempo", 0A,"3. Salir",0A,"$"
+        MenuSpeed db "1. 0",0A,"2. 1",0A,"3. 2",0A,"4. 3",0A,"5. 4",0A,"6. 5",0A,"7. 6",0A,"8. 7",0A,"9. Salir",0A,"$"
         datosOrd dw 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"$"
         indexDato dw 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"$"
         nRepeticiones dw 0 ;variable para indicarle al programa cuantas veces repetir un ordenamiento 
@@ -173,11 +173,11 @@ mVariables macro
             msgPressEnd     db  "Press END(fin) to print Rep"
 
     ;JUEGO===========================================================================
-        NameUserG db 15t dup(" ") ;NICKNAME DEL JUGADOR  mDrawRectangulo
+        NameUserG db 15t dup(" ") ;NICKNAME DEL JUGADOR  mDrawRectangulo mSumarDw
         auxfpsT db 0
         ;MENSAJES
             Usergame db "Username:"
-            Leveltitle db "Level:"
+            Leveltitle db "Vidas:"
             Scoregame db "Score:"
             Timegame db "Time:"
             Livesgame db "Lives:"
@@ -185,7 +185,12 @@ mVariables macro
             toStartG  db "to Start"
         ;SCORE
             scoreG dw 0
+            unidad dw 0
+            decena dw 0
             scoreGString db 5 dup (0)
+
+            vidas dw 0
+            vidasString db 5 dup (0)
         ;NIVEL 
             nivelGame dw 0
             nivelGameS dw 0 
@@ -242,7 +247,7 @@ mVariables macro
             estD1 db 0
             estD2 db 0
             estD3 db 0
-        ;MINUTOS SEGUNDOS Y CENTISEGUNDOS
+        ;MINUTOS SEGUNDOS Y CENTISEGUNDOS MenuUsuario
             mingameS db 2 dup (0)
             seggameS db 2 dup (0)
             cengameS db 2 dup (0)
@@ -254,7 +259,7 @@ mVariables macro
             segGameReporte dw 0
         ;PAUSA Y EXIT GAME 
             letGover    db "Game over!"
-            letEsp      db "(Press Esp to Exit)"
+            letEsp      db "WINER :D"
             letPause    db "Pause"
             letRen      db "Continue (Esp)"
             letExit     db "Exit (Esc)"
@@ -296,12 +301,13 @@ mVariables macro
         creacionCorrecta db 0       ;si se creo  con exito un nuevo documento su valor sera 1, caso contrario sera 0
         posLectura dw 0 ;VARIABLE CON LA CUAL SI LLEGA A 0 LUEGO DE INSTANCIAR LA MARCO READFILE SIGNIFICA QUE
         ;EL DOCUMENTO LLEGO AL FINAL DE ESTE
-        idEncontrado db 0 ;SE ENCONTRO LA PALABRA EN ESPECIAL QUE SE REQUERIA?
+        idEncontrado db 0 ;SE ENCONTRO LA PALABRA EN ESPECIAL QUE SE REQUERIA? mOpenFile2Write
     
     ;APARTADO PARA LOS ARCHIVOS QUE FUNCIONARAN COMO BASE DE DATOS==================================
         usersb      db  "users.gal",0
         scoresb     db  "scores.gal",0
-        RepOrdName  db  "LASTSORT.REP",0
+        scoresb2     db  "scores2.gal",0
+        RepOrdName  db  "resultados.REP",0
         auxarchivo  db 0
         aux1 db "$"
     ;REPORTE DE ORDENAMIENTO ======================================================================
@@ -312,16 +318,16 @@ mVariables macro
         msgEnter        db  0A 
         aux3            db "$"
         msgType         db  "Tipo: "
-        msgSentido      db  "Sentido: "
+        msgSentido      db  "_"
         msgFecha        db  "Fecha: "
         msgHora         db  "Hora: "
         slash           db  2Fh
-        msgAscen        db  "Ascendente"
+        msgAscen        db  "_"
         msgDescen       db  "Descendente"
         msgTitleRep     db  "Rank   Player           N       Points  Time",0A
         auxtitlerep     db "$"
         msgEspacios     db  "            "
-        userprueba      db "brandonyax     "
+        userprueba      db "johnlopez     "
     ;CONTADOR DELAY
     cdelay db 0
     ;PARA LA COMPARACION DE CADENAS==================================================
@@ -335,7 +341,7 @@ endm
 
 mUserExiste macro Username 
     local Existe,Noexiste,salir,cicloexiste
-    ;SE VERIFICA SI NO ES EL ADMIN
+    ;SE VERIFICA SI NO ES EL ADMIN RepOrdName  scoresb2
     mReadFile eleActual ;TOMA EL PRIMER VALOR DEL ARCHIVO 
     mEncontrarId Username;lo primero en el documento de usuarios es el admin, que siempre estara aca
     cmp idEncontrado,1 ; se encontro usuario? 
@@ -358,7 +364,7 @@ mUserExiste macro Username
         mov existee, 0 ; no existe usuario, no hay error
     salir:
 endm 
-; pQuitarbloqAdmin msgPinc
+; pQuitarbloqAdmin msgPinc MenuUsuarioAdmin
 
 ;METODOS PARA REGISTRAR############################################################################################
 
@@ -432,7 +438,7 @@ mUserExisteR macro
         call pCloseFile
         jmp salir 
     Noexiste:
-        mov existee, 0 ; no existe usuario, no hay error mRequisitoCletra
+        mov existee, 0 ; no existe usuario, no hay error mRequisitoCletra scoreG
         call pCloseFile
     salir:
 endm 
@@ -702,7 +708,7 @@ Num2String macro numero, stringvar  ;stringvar: variable donde se almacenara el 
     mov contador,0
     mov bx,0A
     mov ax, numero
-    cNumerador:   ;condicion de numerador
+    cNumerador:   ;condicion de numerador mImprimirLetreros
         xor dx,dx
         div bx
         push dx
@@ -856,7 +862,7 @@ mCompararDw macro var1,var2
 endm 
 
 
-;SUMAR DW
+;SUMAR DW mMultiplicacionDw
 mSumarDw macro var1,var2
     push ax 
     xor ax,ax 
@@ -1049,7 +1055,7 @@ mOpenFile2Write macro fileName
         mov estadocarga,0
         jmp salidaOpen
     Opencorrecto:
-        ;mMostrarString cargood
+        ;mMostrarString cargood mCapturarFilaDoc Num2String
         mov estadocarga,1
         jmp salidaOpen
     salidaOpen:
@@ -1457,7 +1463,7 @@ mMoverAFila macro fila
     salir:     
     pop cx
 endm 
-;CAPTURA LA FILA ACTUAL DONDE SE ENCUENTRA EL CURSOR EN EL DOCUMENTO LEIDO EN UNA VARIABLE
+;CAPTURA LA FILA ACTUAL DONDE SE ENCUENTRA EL CURSOR EN EL DOCUMENTO LEIDO EN UNA VARIABLE mOpenFile2Write
 mCapturarFilaDoc macro varAlmacenadora 
     local salir,capturarString,noseparador,separador
     push si  

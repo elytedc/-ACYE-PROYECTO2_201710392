@@ -331,19 +331,15 @@ pMenuAdmin proc
     mov ah,01
     int 21;atrapa la tecla fn 
     mov opcion,al
-    cmp opcion, 59t
-    je unlockUser
     cmp opcion, 31h
-    je darAdmin
+    je pShowtop10
     cmp opcion, 32h
-    je quitarAdmin
+    je pShowtop10
     cmp opcion, 33h
     je Bublesort
     cmp opcion, 34h
-    je heapsort
+    je Bublesort
     cmp opcion, 35h
-    je Timsort
-    cmp opcion, 36h
     je salir 
     mMostrarString opi
     jmp ciclomenu
@@ -389,9 +385,9 @@ pMenuUser proc
     je game
     cmp opcion, 32h
     je totalscorboard
+    ;cmp opcion, 33h
+    ;je myscorboards
     cmp opcion, 33h
-    je myscorboards
-    cmp opcion, 34h
     je salir 
     mMostrarString opi
     jmp menuUser
@@ -420,24 +416,22 @@ pMenuU_admin proc
     ; para que los reconozca por tal motivo se hizo esto dos veces para que se pudiera a trapar el valor de Fn
     mov ah,01
     int 21
-    mov ah,01  ;atrapa la tecla fn 
-    int 21
     mov opcion,al
     cmp opcion, 59t
     je unlockUser
-    cmp opcion, "<"
+    cmp opcion, 37h
     je totalscorboard
-    cmp opcion, "="
+    cmp opcion, 31h
     je myscorboards
-    cmp opcion, ">"
+    cmp opcion, 32h
     je game 
-    cmp opcion, "?"
+    cmp opcion, 33h
     je Bublesort
-    cmp opcion, "@"
+    cmp opcion, 34h
     je heapsort
-    cmp opcion, "A"
+    cmp opcion, 35h
     je Timsort
-    cmp opcion, "C"
+    cmp opcion, 36h
     je salir 
     mMostrarString opi
     jmp ciclomenu
@@ -911,7 +905,7 @@ pMovimientoGame proc
         cmp printEnemyE,1 ;SI YA SE IMPRIMIO NO VOLVER A IMPRIMIR 
         je yaimpresoEnemy
         ;SE ESPERA A QUE EL USUARIO PRESIONE ESPACIO PARA PODER IMPRIMIR LOS ENEMIGOS Y SEGUIR CON EL RESTO DEL JUEGO  
-            ;call pEspInicial
+            call pEspInicial
             ;mDelayt 1t  ;DELAY ANTES DE EMEPEZAR CADA NIVEL, ESTE DELAY ES DE 1 SEGUNDO 
         call pDrawEnemigos ;SE IMPRIME ENEMIGOS 
         mov printEnemyE,1 ;SE MARCA QUE YA SE IMPRIMIO 
@@ -2224,7 +2218,7 @@ pDrawEnemigos proc
     ret 
 pDrawEnemigos endp 
 
-;MOV-------- -----------------------------------------------------------------------------
+;MOV-------- ----------------------------------------------------------------------------- RepOrdName
 pMovNave proc
     push ax 
         mov ah,01 ;existe pulsascion o no?
@@ -2337,7 +2331,7 @@ pMovNave proc
     salir: 
     pop ax 
     ret 
-pMovNave endp 
+pMovNave endp  
 
 pMovbala proc
     push ax
@@ -2980,13 +2974,11 @@ pMenuOrd  proc
         mMostrarString MenuDirOrd
         mov ah,01;atrapa la tecla fn
         int 21
-        mov ah,01  ;atrapa la tecla escogida  
-        int 21
-        cmp al,59t ;F1=;
+        cmp al,31h ;F1=;
         je ascending
-        cmp al,"<" ;F2="<"
+        cmp al,32h ;F2="<"
         je descending
-        cmp al,"C"
+        cmp al,33h
         je salir 
         mMostrarString opi 
         call pEspEnter
@@ -3003,13 +2995,11 @@ pMenuOrd  proc
         mMostrarString MenuMetricaOrd
         mov ah,01;atrapa la tecla fn
         int 21
-        mov ah,01  ;atrapa la tecla escogida  
-        int 21
-        cmp al,59t ;F1=;
+        cmp al,31h ;F1=;
         je mePoints
-        cmp al,"<" ;F2="<"
+        cmp al,32h ;F2="<"
         je meTiempo
-        cmp al,"C"
+        cmp al,33h
         je salir 
         mMostrarString opi 
         call pEspEnter
@@ -3091,7 +3081,7 @@ pOrdenamiento proc
     ret 
 pOrdenamiento endp 
 
-;REPORTE FINAL LUEGO DEL ORDENAMIENTO 
+;REPORTE FINAL LUEGO DEL ORDENAMIENTO  msgPressEnd msgPressHome
 pReporteOrden proc 
     push ax 
     push bx 
@@ -3102,7 +3092,7 @@ pReporteOrden proc
     mWriteToFile sepRepOrden
     mWriteToFile mensajeI
     mWriteToFile sepRepOrden
-    mWriteToFile msgType
+   ; mWriteToFile msgType
         cmp tOrdenamiento,0 ;burbuja
         je burbuja
         jmp burbuja;CAMBIAR ESTO CUANDO SE AGREGUEN OTROS ORDENAMIENTOS 
@@ -3112,7 +3102,7 @@ pReporteOrden proc
         otro: 
         finTord: 
     mWriteToFile msgEspacios
-    mWriteToFile msgSentido
+    ;mWriteToFile msgSentido
         cmp ascDec,0
         jne desc ;si no es ascending saltara a descending 
         asc:
@@ -3225,7 +3215,7 @@ pMoveOrdenamiento proc
     sinAccion:
     jmp fps 
     exit: 
-        mImprimirLetreros msgPressEnd,24t,7t,15t
+        ;mImprimirLetreros msgPressEnd,24t,7t,15t msgPressEnd
         ciclo: ;SALE HASTA QUE SE PRESIONE "FIN"
         mov ah, 00  ;Espera a que se presione una tecla y la lee
         int 16h
@@ -3239,7 +3229,7 @@ pMoveOrdenamiento proc
         pop ax 
     ret 
 pMoveOrdenamiento endp 
-;RECOLECTOR DE DATOS DE BLOC DE NOTAS 
+;RECOLECTOR DE DATOS DE BLOC DE NOTAS  scoresb
 pRDatosOrdPuntos proc
     push si 
     call pLimpiarArraySort   
@@ -3254,11 +3244,11 @@ pRDatosOrdPuntos proc
     mReadFile eleactual
     cmp eleactual," "
     je salir 
-    mHallarSimbolo 01
-    mHallarSimbolo 01 
+    mHallarSimbolo ";"
+    mHallarSimbolo ";"
     cmp punOtiempo,1 ;SE ESCOGIO LA METRICA DEL TIEMPO? SI ES ASI MOVERSE UNA SEPARACION MAS
     jne notiempo;SI NO ES ASI NO MOVERSE MAS DE LA POSICION ACTUAL 
-        mHallarSimbolo 01
+        mHallarSimbolo ";"
     notiempo: 
     mReadFile eleactual
     mLimpiar NumactualDocS,6t,"$"
@@ -3537,7 +3527,7 @@ pConfigInicOrd proc
         fMtitle: 
                    ;fila,columna,ancho,largo,color   (ancho:arriba-abajo,largo: izq-der)
         mDrawBarra 188t,1t,3t,319t,3t 
-        mImprimirLetreros msgPressHome,24t,7t,15t
+        ;mImprimirLetreros msgPressHome,24t,7t,15t toStartG
     ret 
 pConfigInicOrd endp 
 
@@ -3616,6 +3606,7 @@ pDrawTimeOrd endp
 
 ;top10
 pShowtop10 proc
+    call pReporteOrden
     push ax 
     push bx 
     push cx 
